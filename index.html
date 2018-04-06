@@ -4,73 +4,75 @@
 		<meta charset=utf-8>
 		<title>My first three.js app</title>
 		<style>
-			body { margin: 0; }
-			canvas { width: 100%; height: 100% }
+			body { 
+        margin: 0;
+        overflow: hidden;        
+      }
 		</style>
-		<script src="three.min.js"></script>
-		<script>
-	var container;
-	var camera, scene, renderer;
-	var uniforms, material, mesh;
-	var mouseX = 0, mouseY = 0,
-	lat = 0, lon = 0, phy = 0, theta = 0;
-	var windowHalfX = window.innerWidth / 2;
-	var windowHalfY = window.innerHeight / 2;
-  
-  var startTime;
-  var vertexShader;
-  var fragmentShader;  
-  var jsonShader;
-  
-  fetch('shader.json').then(function(response) {
-    return response.json();
-  }).then(function(json) {
-    console.log(json);
-    jsonShader = json;
-    uniforms = json.uniforms;
-		uniforms.resolution.value = {
-      x: window.innerWidth,
-      y: window.innerHeight
-    };
-    startTime = Date.now();
-		uniforms.time.value = 0;    
-    init();
-  });	
-  
-	
-  
-	function init() {
-		container = document.body;
-		camera = new THREE.Camera();
-		camera.position.z = 1;
-		scene = new THREE.Scene();
-    
-		material = new THREE.RawShaderMaterial( {
-			uniforms: uniforms,
-			vertexShader: jsonShader.vertex,
-			fragmentShader: jsonShader.fragment
-		});
-		mesh = new THREE.Mesh( new THREE.PlaneGeometry( 2, 2 ), material );
-		scene.add( mesh );
-		renderer = new THREE.WebGLRenderer();
-		container.appendChild( renderer.domElement );
-
-		renderer.setSize( window.innerWidth, window.innerHeight );
-    animate();
-	}
-	function animate() {
-		requestAnimationFrame( animate );
-		render();
-	}
-	function render() {
-		var elapsedMilliseconds = Date.now() - startTime;
-		var elapsedSeconds = elapsedMilliseconds / 1000.;
-		uniforms.time.value = elapsedSeconds;
-		renderer.render( scene, camera );
-	}
-		</script>    
 	</head>
 	<body>
-
+    <div id="container"></div>
+    
+		<script src="three.min.js"></script>
+		<script>
+      var container = document.getElementById('container');
+      var camera, scene, renderer;
+      var uniforms, material, mesh;
+      var mouseX = 0, mouseY = 0,
+      lat = 0, lon = 0, phy = 0, theta = 0;
+      var windowHalfX = window.innerWidth / 2;
+      var windowHalfY = window.innerHeight / 2;
+      
+      var startTime;
+      var vertexShader;
+      var fragmentShader;  
+      var jsonShader;
+      
+      fetch('shader.json').then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        console.log(json);
+        jsonShader = json;
+        uniforms = json.uniforms;
+        uniforms.resolution.value = {
+          x: window.innerWidth,
+          y: window.innerHeight
+        };
+        startTime = Date.now();
+        uniforms.time.value = 0;    
+        init();
+      });	
+      
+      
+      
+      function init() {
+        container = document.body;
+        camera = new THREE.Camera();
+        camera.position.z = 1;
+        scene = new THREE.Scene();
+        
+        material = new THREE.RawShaderMaterial( {
+          uniforms: uniforms,
+          vertexShader: jsonShader.vertex,
+          fragmentShader: jsonShader.fragment
+        });
+        mesh = new THREE.Mesh( new THREE.PlaneGeometry( 2, 2 ), material );
+        scene.add( mesh );
+        renderer = new THREE.WebGLRenderer();
+        container.appendChild( renderer.domElement );
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        animate();
+      }
+      function animate() {
+        requestAnimationFrame( animate );
+        render();
+      }
+      function render() {
+        var elapsedMilliseconds = Date.now() - startTime;
+        var elapsedSeconds = elapsedMilliseconds / 1000.;
+        uniforms.time.value = elapsedSeconds;
+        renderer.render( scene, camera );
+      }
+		</script>  
 	</body>
 </html>
